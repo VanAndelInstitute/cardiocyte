@@ -7,3 +7,15 @@ test_that("Peak detection", {
   expect_equal(length(peaks), 23)
 })
 
+test_that("Esemble pulses", {
+  data(ca_flux)
+  signal <- ca_flux$Mean1
+  dat <- ensemble(signal, norm = FALSE)
+  expect_equal(nrow(dat), 22)
+  expect_equal(ncol(dat), 9)
+  expect_equal(round(sum(dat), 1), 17540.6)
+
+  dat <- ensemble(signal, norm = TRUE)
+  expect_equal(max(dat), 1)
+  expect_equal(min(dat), 0)
+})

@@ -1,3 +1,5 @@
+globalVariables(c("y", "size", "pulse"))
+
 #' plot_curve
 #'
 #' Plot curves with annotation
@@ -29,6 +31,35 @@ plot_curve <- function(x) {
     theme(axis.title = element_text(face = "bold"))
 }
 
-
+#' plot_ensemble
+#'
+#' Extract all curves and overlay
+#'
+#' @param x a vector of data
+#' @param offset Move the sliding window offset time points  if desired
+#' @param norm Should each pulse be normalized to [0,1]?
+#'
+#' @return none. Called for side effect of generating plot
+#' @import ggplot2
+#' @importFrom reshape2 melt
+#' @export
+#'
+plot_ensemble <- function(x, offset = 0, norm = TRUE) {
+  dat <- ensemble(x, offset, norm)
+  dat <- melt(dat)
+  colnames(dat) <- c("pulse", "x", "y")
+  if (norm) {
+    lab <- "Normalized signal"
+  } else {
+    lab <- "Signal"
+  }
+  ggplot(dat, aes(x = x, y = y,
+                  color = factor(pulse))) +
+    geom_path(show.legend = FALSE) +
+    ylab(lab) +
+    xlab("Slice") +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold"))
+}
 
 

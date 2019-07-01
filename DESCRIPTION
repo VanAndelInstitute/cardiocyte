@@ -6,15 +6,22 @@ Authors@R:
            family = "Bauman",
            role = c("aut", "cre"),
            email = "joshua.bauman@vai.org")
+    person(given = "Eric",
+           family = "Kort",
+           role = c("aut", "cre"),
+           email = "eric.kort@vai.org")
 Description: What the package does (one paragraph).
 Imports:
-    baseline
+    baseline,
+    ggplot2,
+    seewave,
+    reshape2
 Suggests:
     knitr,
     devtools,
     roxygen2,
     testthat (>= 2.1.0)
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
