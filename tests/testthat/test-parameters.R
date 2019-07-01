@@ -19,3 +19,11 @@ test_that("Esemble pulses", {
   expect_equal(max(dat), 1)
   expect_equal(min(dat), 0)
 })
+
+test_that("Pulse width can be calculated", {
+  data(ca_flux)
+  dat <- ensemble(ca_flux$Mean1)
+  widths <- pulse_widths(dat)
+  expect_equal(widths[1], 10.5)
+})
+
