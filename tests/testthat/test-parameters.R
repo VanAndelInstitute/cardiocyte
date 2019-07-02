@@ -50,3 +50,9 @@ test_that("%Peak height can be calculated", {
   percent <- percent_peak_height(ca_flux$Mean1)
   expect_equal(round(percent[1], 1), 28.4)
 })
+
+test_that("Time to Peak", {
+  data(ca_flux)
+  time <- time_to_peak(ca_flux$Mean1)
+  expect_equal(time[1], 1)
+})
