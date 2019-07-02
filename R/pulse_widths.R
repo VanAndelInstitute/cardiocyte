@@ -19,10 +19,15 @@ pulse_widths <- function(x, p) {
     m <- max(x[i,])
 
     # find the threshold value for that pulse (p * m)
+    thr <- (m * p)
 
     # find the minimum and maximum index for values greater than threshold
+    min <- min(which(x[i,] > thr))
+    max <- max(which(x[i,] > thr))
 
     # the range is maximum index - minimum index
+    range <- max - min
+    return(range)
   }
   return(unlist(res))
 }
