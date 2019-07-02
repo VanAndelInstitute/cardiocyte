@@ -32,3 +32,10 @@ test_that("Max velocities can be calculated", {
   vels <- max_velocities(dat)
   expect_equal(vels[1], 8)
 })
+
+test_that("Peak height can be calculated", {
+  data(ca_flux)
+  height <- peak_height(ca_flux$Mean1)
+  expect_equal(round(height[1], 1), 25.5)
+})
+
