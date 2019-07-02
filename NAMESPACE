@@ -3,6 +3,7 @@
 export(correct_baseline)
 export(ensemble)
 export(find_peaks)
+export(max_velocities)
 export(peak_height)
 export(percent_peak)
 export(plot_curve)
