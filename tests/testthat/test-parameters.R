@@ -27,3 +27,8 @@ test_that("Pulse width can be calculated", {
   expect_equal(widths[1], 8)
 })
 
+test_that("Max velocities can be calculated", {
+  data(ca_flux)
+  vels <- max_velocities(dat)
+  expect_equal(vels[1], 8)
+})

@@ -1,10 +1,13 @@
 #' find_peaks
 #'
 #' Find peaks in signal using hilbert transform. Note that this approach
-#' works better if the signal is not baseline corrected.
+#' works better if the signal is not baseline corrected. The first peak
+#' is often spurious (the result of catching a transient in the middle),
+#' so the drop parameter defaults to 1.
 #'
 #' @param x a vector of data to find peaks in
 #' @param f signal frequency. Default is 5Hz.
+#' @param drop number of intial observations to drop. Default is 1.
 #'
 #' @return vector of indices of x where peaks are
 #' @importFrom seewave hilbert bwfilter
@@ -13,7 +16,7 @@
 #' @examples
 #' data(ca_flux)
 #' a <- find_peaks(ca_flux$Mean1)
-find_peaks <- function(x, f = 5) {
+find_peaks <- function(x, f = 5, drop=1) {
   hil <- Im(hilbert(x, f))
   hil <- correct_baseline(hil)
 
@@ -21,8 +24,10 @@ find_peaks <- function(x, f = 5) {
   peaks <- which(diff(sign(hil)) > 0)
   peaks <- .check_peaks(x, peaks)
 
-  # first peak is likely noise
-  return(peaks[-1])
+  if(drop > 1) {
+     peaks <- peaks[c-c(1:drop)]
+  }
+  peaks
 }
 
 # internal function to clean up peak misses from hilbert

@@ -3,6 +3,7 @@
 export(correct_baseline)
 export(ensemble)
 export(find_peaks)
+export(max_velocities)
 export(plot_curve)
 export(plot_ensemble)
 export(pulse_widths)
