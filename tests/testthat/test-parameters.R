@@ -3,7 +3,7 @@ context("Signal parameters")
 test_that("Peak detection", {
   data(ca_flux)
   signal <- ca_flux$Mean1
-  peaks <- find_peaks(signal)
+  peaks <- find_peaks(signal, drop = 1)
   expect_equal(length(peaks), 23)
 })
 
@@ -29,8 +29,8 @@ test_that("Pulse width can be calculated", {
 
 test_that("Max velocities can be calculated", {
   data(ca_flux)
-  vels <- max_velocities(dat)
-  expect_equal(vels[1], 8)
+  vels <- max_velocities(ca_flux$Mean1)
+  expect_equal(vels$velocity.up[1], 6.024089, tolerance = 1e-3)
 })
 
 test_that("Peak height can be calculated", {

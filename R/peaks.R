@@ -24,8 +24,8 @@ find_peaks <- function(x, f = 5, drop=1) {
   peaks <- which(diff(sign(hil)) > 0)
   peaks <- .check_peaks(x, peaks)
 
-  if(drop > 1) {
-     peaks <- peaks[c-c(1:drop)]
+  if(drop > 0) {
+     peaks <- peaks[-c(1:drop)]
   }
   peaks
 }

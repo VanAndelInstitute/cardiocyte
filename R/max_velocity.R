@@ -13,6 +13,10 @@
 max_velocities <- function(x, offset = 0) {
   sm <- smooth.spline(x)
   sm.prime <- predict(sm, deriv = 1)
-  peaks <- find_peaks(correct_baseline(sm.prime$y), drop = 0)
-  data.frame(x = peaks, velocity = sm.prime$y[peaks])
+  peaks.u <- find_peaks(correct_baseline(sm.prime$y), drop = 0)
+  peaks.d <- find_peaks(-correct_baseline(sm.prime$y), drop = 0)
+  list(x.up = peaks.u,
+             x.down = peaks.d,
+             velocity.up = sm.prime$y[peaks.u],
+             velocity.down = sm.prime$y[peaks.d])
 }
