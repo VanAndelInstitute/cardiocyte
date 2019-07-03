@@ -1,6 +1,6 @@
 #' max_rates_baseline
 #'
-#' Calculate the max rates per baseline
+#' Calculate the maximum velocities / baseline
 #'
 #' @param x vector of trace data
 #'
