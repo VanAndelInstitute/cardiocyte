@@ -56,3 +56,9 @@ test_that("Time to Peak", {
   time <- time_to_peak(ca_flux$Mean1)
   expect_equal(time[1], 1)
 })
+
+test_that("Max Rates per Baseline can be calculated", {
+  data(ca_flux)
+  rates <- max_rates_baseline(ca_flux$Mean1)
+  expect_equal(round(rates[1], 4), .0635)
+})
