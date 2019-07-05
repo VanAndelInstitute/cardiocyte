@@ -17,7 +17,8 @@
 #' data(ca_flux)
 #' a <- find_peaks(ca_flux$Mean1)
 find_peaks <- function(x, f = 5, drop=1) {
-  hil <- Im(hilbert(x, f))
+  sm <- smooth.spline(x)
+  hil <- Im(hilbert(sm$y, f))
   hil <- correct_baseline(hil)
 
   # peaks are where hilbert transform crosses zero.
@@ -25,7 +26,7 @@ find_peaks <- function(x, f = 5, drop=1) {
   peaks <- .check_peaks(x, peaks)
 
   if(drop > 0) {
-     peaks <- peaks[-c(1:drop)]
+    peaks <- peaks[-c(1:drop)]
   }
   peaks
 }

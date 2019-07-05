@@ -5,6 +5,8 @@ test_that("Peak detection", {
   signal <- ca_flux$Mean1
   peaks <- find_peaks(signal, drop = 1)
   expect_equal(length(peaks), 23)
+  sp <- sum(find_peaks(ca_flux$Mean1))
+  expect_equal(sp, 2166) # issue #1
 })
 
 test_that("Esemble pulses", {

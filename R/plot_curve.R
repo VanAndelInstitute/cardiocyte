@@ -11,7 +11,7 @@ globalVariables(c("y", "size", "pulse"))
 #' @export
 #'
 plot_curve <- function(x) {
-  peaks <- find_peaks(x)
+  peaks <- find_peaks(x, drop =0)
   cor <- correct_baseline(x)
   peak_size <- rep(0, length(x))
   peak_size[peaks] <- 1
