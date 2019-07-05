@@ -13,6 +13,7 @@ globalVariables(c("y", "size", "pulse"))
 plot_curve <- function(x) {
   peaks <- find_peaks(x, drop =0)
   cor <- correct_baseline(x)
+  cor <- x
   peak_size <- rep(0, length(x))
   peak_size[peaks] <- 1
   gd <- data.frame(y = cor,
@@ -30,6 +31,41 @@ plot_curve <- function(x) {
     scale_radius(range = c(0,2)) +
     theme(axis.title = element_text(face = "bold"))
 }
+
+geom_vel_up <- function(x, digits = 3, ...) {
+  dat <- data.frame(x = x)
+  dat$vel.up <- NA
+  dat$y <- NA
+  vel <- max_velocities(dat$x)
+
+  dat$vel.up[vel$x.up] <- round(vel$velocity.up, digits)
+  dat$y[vel$x.up] <- x[vel$x.up]
+
+  geom_text(aes(y = dat$y, label= paste(dat$vel.up, "\u2192")),
+              size = 2,
+              col = "darkgreen",
+              srt = 90,
+              na.rm = TRUE,
+              nudge_x = -1.7,
+              ...)
+}
+
+geom_vel_down <- function(x, digits = 3, ...) {
+  dat <- data.frame(x = x)
+  dat$vel.down <- NA
+  dat$y <- NA
+  vel <- max_velocities(dat$x)
+  dat$vel.down[vel$x.down] <- round(vel$velocity.down, digits)
+  dat$y[vel$x.down] <- x[vel$x.down]
+  geom_text(aes(y = dat$y, label= paste(dat$vel.down, "\u2192")),
+            size = 2,
+            col = "darkred",
+            srt = 270,
+            na.rm = TRUE,
+            nudge_x = 1.7,
+            ...)
+}
+
 
 #' plot_ensemble
 #'
