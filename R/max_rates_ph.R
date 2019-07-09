@@ -15,6 +15,6 @@
 max_rates_ph <- function(x) {
   mvs <- max_velocities(x)
   ph <- peak_height(x)
-  rates <- mvs$velocity.up / ph
+  rates <- mvs$velocity.up / ph[find_peaks(x)]
   return(rates)
 }
