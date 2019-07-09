@@ -119,10 +119,21 @@ max_velocities(ca_flux$Mean1)
 
 ## max_rates_baseline()
 
-This function 
+This function divides the maximum transient velocity of each peak by the baseline calcium flux at the point where the transient reaches its maximum velocity. 
 
 ```{r}
-max_rates_baseline(ca_flux$Mean1)
+max_rates_bl(ca_flux$Mean1)
+
+max_rates_bl(ca_flux$Mean2)
 ```
 
+## max_rates_ph()
+
+This function divides the maximum transient velocity of each peak by the height of that specific peak. 
+
+```{r}
+max_rates_ph(ca_flux$Mean1)
+
+max_rates_ph(ca_flux$Mean2)
+```
 

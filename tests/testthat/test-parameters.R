@@ -68,5 +68,5 @@ test_that("Max Rates per Baseline can be calculated", {
 test_that("Max Rates per peak height can be calculated", {
   data(ca_flux)
   rates <- max_rates_ph(ca_flux$Mean1)
-  expect_equal(round(rates[1], 3), 0.216)
+  expect_equal(round(rates[1], 3), 0.236)
 })

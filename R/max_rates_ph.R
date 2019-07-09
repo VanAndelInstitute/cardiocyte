@@ -10,11 +10,10 @@
 #' @importFrom baseline baseline
 #' @examples
 #' data(ca_flux)
-#' dat <- ensemble(ca_flux$Mean1)
-#' ph <- max_rates_ph(dat)
+#' dat <- max_rates_ph(ca_flux$Mean1)
 max_rates_ph <- function(x) {
   mvs <- max_velocities(x)
   ph <- peak_height(x)
-  rates <- mvs$velocity.up / ph[find_peaks(x)]
+  rates <- mvs$velocity.up / ph
   return(rates)
 }
