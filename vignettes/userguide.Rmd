@@ -70,12 +70,12 @@ pulse_widths(dat, .8)
 
 ## time_to_peak()
 
-This function calculates the time (in slices) that it takes for a pulse to reach its maximum. The function takes data from an ensamble() matrix and starts calculating time when the pulse reaches 10% of the peak height. It returns the time calculated for the pulse to go from 10% to maximum peak height. 
+This function calculates the time (in slices) that it takes for a pulse to reach its maximum. The function an ImageJ dataset and an ROI Mean and starts calculating time when the pulse reaches 10% of the peak height. It returns the time calculated for the pulse to go from 10% to maximum peak height. 
 
 ```{r}
-time_to_peak(dat)
+time_to_peak(ca_flux$Mean1)
 
-time_to_peak(dat2)
+time_to_peak(ca_flux$Mean2)
 ```
 
 ## percent_peak()

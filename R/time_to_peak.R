@@ -10,8 +10,7 @@
 #' @importFrom baseline baseline
 #' @examples
 #' data(ca_flux)
-#' dat <- ensemble(ca_flux$Mean1)
-#' ph <- time_to_peak(dat)
+#' ph <- time_to_peak(ca_flux$Mean1)
 time_to_peak <- function(x) {
  bl <- baseline(as.matrix(t(x)), method = 'rolling', wm = 5, ws = 5)@baseline
  pp <- find_peaks(x)
