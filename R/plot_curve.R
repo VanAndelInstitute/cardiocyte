@@ -28,43 +28,74 @@ plot_curve <- function(x) {
     xlab("Slice") +
     ylab("Normalized signal") +
     theme_bw() +
+    scale_y_continuous(expand = c(.3, 0)) +
     scale_radius(range = c(0,2)) +
     theme(axis.title = element_text(face = "bold"))
 }
 
-geom_vel_up <- function(x, digits = 3, ...) {
-  dat <- data.frame(x = x)
-  dat$vel.up <- NA
-  dat$y <- NA
-  vel <- max_velocities(dat$x)
 
-  dat$vel.up[vel$x.up] <- round(vel$velocity.up, digits)
-  dat$y[vel$x.up] <- x[vel$x.up]
+#' geom_vel
+#'
+#' Add maximum negative velocity layer to existing ggplot
+#'
+#' @param mapping	Set of aesthetic mappings created by \code{aes()} or
+#' \code{aes_()}. Default is to inherit from parent ggplot.
+#' @param data The data to be displayed in this layer. Default is to inherit
+#' from parent.
+#' @param position	Position adjustment, either as a string, or the result of a
+#' call to a position adjustment function.
+#' @param na.rm	If \code{FALSE}, missing values are removed with a
+#' warning. If \code{TRUE} (the default), missing values are silently removed.
+#' Since this geom creates missing values by design such that only maximums are
+#' annotated, the default value is recommended.
+#' @param direction Default (\code{up}) is to annotate maximum upward velocity.
+#' Alternative is \code{down} to annotate maximum downward velocity.
+#' @param digits Number of digits to round/pad do in plot. Default is 3.
+#' @param cex Size for annotation text.
+#' @param color color for annotation text. Default is dark green for upward
+#' velocity and dark red for downward velocity.
+#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics,
+#' rather than combining with them. The default value of \code{TRUE} should be
+#' desirable for most uses of this function.
+#'
+#' @return none. Called for side effect of generating plot layer
+#' @importFrom ggplot2 geom_text
+#' @export
+geom_vel <- function(mapping = NULL,
+                     data = NULL,
+                     position = "identity",
+                     na.rm = TRUE,
+                     direction = "up",
+                     digits = 3,
+                     cex = 2.5,
+                     color = NA,
+                     inherit.aes = TRUE,
+                     ...) {
+  if(direction == "up") {
+    if(is.na(color))
+      color <- "darkgreen"
+    srt <- 90
+  } else {
+    if(is.na(color))
+      color <- "darkred"
+    srt <- 270
+  }
 
-  geom_text(aes(y = dat$y, label= paste(dat$vel.up, "\u2192")),
-              size = 2,
-              col = "darkgreen",
-              srt = 90,
-              na.rm = TRUE,
-              nudge_x = -1.7,
-              ...)
+  layer(
+    stat = StatVel, data = data, geom = "text",
+    position = position,
+    show.legend = FALSE,
+    inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm,
+                  digits = digits,
+                  direction = direction,
+                  color = color,
+                  cex = cex,
+                  srt = srt,
+                  ...)
+  )
 }
 
-geom_vel_down <- function(x, digits = 3, ...) {
-  dat <- data.frame(x = x)
-  dat$vel.down <- NA
-  dat$y <- NA
-  vel <- max_velocities(dat$x)
-  dat$vel.down[vel$x.down] <- round(vel$velocity.down, digits)
-  dat$y[vel$x.down] <- x[vel$x.down]
-  geom_text(aes(y = dat$y, label= paste(dat$vel.down, "\u2192")),
-            size = 2,
-            col = "darkred",
-            srt = 270,
-            na.rm = TRUE,
-            nudge_x = 1.7,
-            ...)
-}
 
 
 #' plot_ensemble
@@ -89,13 +120,78 @@ plot_ensemble <- function(x, offset = 0, norm = TRUE) {
   } else {
     lab <- "Signal"
   }
-  ggplot(dat, aes(x = x, y = y,
-                  color = factor(pulse))) +
-    geom_path(show.legend = FALSE) +
+  ggplot(dat, aes(x = x, y = y)) +
+    geom_path(aes(group = factor(pulse)),
+              show.legend = FALSE,
+              alpha=0.2,
+              lty=3) +
+    geom_point(aes(group = factor(pulse)),
+               show.legend = FALSE,
+               shape = 21,
+               color="#00000000",
+               fill="#00000033") +
+    geom_smooth(method = "gam",
+                formula = y ~ s(x, k = 5),
+                size = 1,
+                alpha = 0.1,
+                fill = "#EB6221",
+                color = "#EB6221") +
     ylab(lab) +
-    xlab("Slice") +
+    xlab("Time") +
     theme_bw() +
     theme(axis.title = element_text(face = "bold"))
 }
+
+# internal Stat function for annotation layers
+StatVel <- ggproto("StatVel",
+                   Stat,
+                   compute_layer = function (self, data, params, layout) {
+                     y <- rep(NA, nrow(data))
+                     v <- rep(NA, nrow(data))
+                     vel <- max_velocities(data$y)
+                     if(params$direction == "up") {
+                       v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
+                                             nsmall = params$digits)
+                       y[vel$x.up] <- min(data$y) * 0.9
+                     } else {
+                       v[vel$x.down] <- format(round(vel$velocity.down, params$digits),
+                                               nsmall = params$digits)
+                       y[vel$x.down] <- max(data$y) * 1.1
+                     }
+                     label= paste(v, "\u2192")
+                     data$y <- y
+                     data$label <- label
+                     data
+                   },
+                   compute_group = function(self, data, scales, na.rm, digits, direction) {
+                   },
+                   required_aes = c("x", "y")
+)
+
+# internal Stat function for annotation layers
+StatPeak <- ggproto("StatPeak",
+                    Stat,
+                    compute_layer = function (self, data, params, layout) {
+                      y <- rep(NA, nrow(data))
+                      v <- rep(NA, nrow(data))
+                      vel <- max_velocities(data$y)
+                      if(params$direction == "up") {
+                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
+                                              nsmall = params$digits)
+                        y[vel$x.up] <- min(data$y) * 0.9
+                      } else {
+                        v[vel$x.down] <- format(round(vel$velocity.down, params$digits),
+                                                nsmall = params$digits)
+                        y[vel$x.down] <- max(data$y) * 1.1
+                      }
+                      label= paste(v, "\u2192")
+                      data$y <- y
+                      data$label <- label
+                      data
+                    },
+                    compute_group = function(self, data, scales, na.rm, digits, direction) {
+                    },
+                    required_aes = c("x", "y")
+)
 
 

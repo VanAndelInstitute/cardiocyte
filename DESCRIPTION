@@ -11,17 +11,21 @@ Authors@R:
            role = c("aut", "cre"),
            email = "eric.kort@vai.org")
 Description: What the package does (one paragraph).
+Depends: 
+    R (>= 3.1.0)
 Imports:
     baseline,
     ggplot2,
     seewave,
-    reshape2
+    reshape2,
+    foreach
 Suggests:
     knitr,
     devtools,
     roxygen2,
     testthat (>= 2.1.0),
-    rmarkdown
+    rmarkdown,
+    BiocStyle
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

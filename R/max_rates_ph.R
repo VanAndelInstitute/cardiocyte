@@ -6,7 +6,6 @@
 #'
 #' @return vector containing the peak %
 #' @export
-#' @import foreach
 #' @importFrom baseline baseline
 #' @examples
 #' data(ca_flux)

@@ -6,11 +6,10 @@
 #'
 #' @return vector containing the peak %
 #' @export
-#' @import foreach
 #' @importFrom baseline baseline
 #' @examples
 #' data(ca_flux)
-#' ph <- percent_peak(cal_flux$Mean1)
+#' ph <- percent_peak(ca_flux$Mean1)
 percent_peak <- function(x) {
   # find the location of the peaks
     peaks <- find_peaks(x)

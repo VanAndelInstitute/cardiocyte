@@ -6,7 +6,6 @@
 #'
 #' @return vector containing the peak heights of the ensemble matrix
 #' @export
-#' @import foreach
 #' @importFrom baseline baseline
 #' @examples
 #' data(ca_flux)

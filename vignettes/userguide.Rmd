@@ -1,8 +1,10 @@
 ---
-title: "userguide"
-output: rmarkdown::html_vignette
+title: "Cardiocyte Guide"
+output: 
+  BiocStyle::html_document:
+    toc_float: true
 vignette: >
-  %\VignetteIndexEntry{userguide}
+  %\VignetteIndexEntry{Cardiocyte Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,17 +16,18 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+# Introduction
 
 Being able to measure and quantify the intensity of cardiomyocyte contraction is very important in developing treatments for cardiovascular diseases that damage cardiac tissue. Cardiomyocyte contraction can be quantified by measuring the flux of Calcium ions across the cell's cytoplasm. This R package contains several tools that make analyzing calcium flux data much more convenient. Becuase calcium flux is transient (departs from a baseline, then returns to it, and repeats) it can be measured in terms of peaks and/or pulses. This package includes functions that help measure and quantify these peaks and pulses. 
-
 
 
 ```{r setup}
 library(cardiocyte)
 ```
 
-## find_peaks()
+# Peak metrics
+
+## Identify pikes with `find_peaks()`
 
 this function takes a dataset from an ImageJ image stack (A video of calcium flux in a cardiomyocyte, in this case **"ca_flux"**), as well as a Mean from a chosen ROI (region of interest, usually membrane surface above cytoplasm), and returns the slice where each peak is located. 
 
@@ -98,15 +101,6 @@ percent_peak_height(ca_flux$Mean1)
 percent_peak_height(ca_flux$Mean2)
 ```
 
-## plot_curve()
-
-This function plots the curve of a Mean of a specific ROI in an ImageJ dataset. It does so with annotation, with the ImageJ slice on the x axis and the normalized signal on the Y axis. 
-
-```{r}
-plot_curve(ca_flux$Mean1)
-
-plot_curve(ca_flux$Mean2)
-```
 
 ## max_velocities()
 
@@ -137,3 +131,16 @@ max_rates_ph(ca_flux$Mean1)
 max_rates_ph(ca_flux$Mean2)
 ```
 
+# Plotting
+
+The cardiocyte package provides functionality to plot annotated transients.
+
+## Annotated transients with `plot_curve()`
+
+We can plot the transients with the plot_curve function
+
+```{r}
+plot_curve(ca_flux$Mean1)
+
+plot_curve(ca_flux$Mean2)
+```
