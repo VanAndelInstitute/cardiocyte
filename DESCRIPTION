@@ -12,7 +12,7 @@ Authors@R:
            email = "eric.kort@vai.org")
 Description: What the package does (one paragraph).
 Depends: 
-    R (>= 3.1.0)
+    R (>= 3.5.0)
 Imports:
     baseline,
     ggplot2,

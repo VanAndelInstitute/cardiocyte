@@ -2,11 +2,11 @@ globalVariables(c("y", "size", "pulse"))
 
 #' plot_curve
 #'
-#' Plot curves with annotation
+#' Plot transient curves, optionally with annotation layers
 #'
 #' @param x a vector of data
-#'
-#' @return none. Called for side effect of generating plot
+#' @rdname plots
+#' @return An object of class ggplot
 #' @import ggplot2
 #' @export
 #'
@@ -21,10 +21,10 @@ plot_curve <- function(x) {
                    size = peak_size)
   ggplot(gd, aes(x = x, y = y)) +
     geom_line() +
-    geom_point(aes(y = 1.02 * cor, alpha = size,
-                   size = size),
-               show.legend = FALSE,
-               pch = 18, color = "#EB6221") +
+    #geom_point(aes(y = 1.02 * cor, alpha = size,
+    #               size = size),
+    #           show.legend = FALSE,
+    #           pch = 18, color = "#EB6221") +
     xlab("Slice") +
     ylab("Normalized signal") +
     theme_bw() +
@@ -36,40 +36,25 @@ plot_curve <- function(x) {
 
 #' geom_vel
 #'
-#' Add maximum negative velocity layer to existing ggplot
+#' @details Here are a bunch of details
 #'
-#' @param mapping	Set of aesthetic mappings created by \code{aes()} or
-#' \code{aes_()}. Default is to inherit from parent ggplot.
-#' @param data The data to be displayed in this layer. Default is to inherit
-#' from parent.
-#' @param position	Position adjustment, either as a string, or the result of a
-#' call to a position adjustment function.
-#' @param na.rm	If \code{FALSE}, missing values are removed with a
-#' warning. If \code{TRUE} (the default), missing values are silently removed.
-#' Since this geom creates missing values by design such that only maximums are
-#' annotated, the default value is recommended.
 #' @param direction Default (\code{up}) is to annotate maximum upward velocity.
 #' Alternative is \code{down} to annotate maximum downward velocity.
 #' @param digits Number of digits to round/pad do in plot. Default is 3.
 #' @param cex Size for annotation text.
-#' @param color color for annotation text. Default is dark green for upward
+#' @param color Color for annotation text. Default is dark green for upward
 #' velocity and dark red for downward velocity.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics,
-#' rather than combining with them. The default value of \code{TRUE} should be
-#' desirable for most uses of this function.
+#' @param ... Additioan arguments passed to gpplot layer.
 #'
+#' @rdname plots
 #' @return none. Called for side effect of generating plot layer
 #' @importFrom ggplot2 geom_text
 #' @export
-geom_vel <- function(mapping = NULL,
-                     data = NULL,
-                     position = "identity",
-                     na.rm = TRUE,
-                     direction = "up",
+#'
+geom_vel <- function(direction = "up",
                      digits = 3,
                      cex = 2.5,
                      color = NA,
-                     inherit.aes = TRUE,
                      ...) {
   if(direction == "up") {
     if(is.na(color))
@@ -82,11 +67,11 @@ geom_vel <- function(mapping = NULL,
   }
 
   layer(
-    stat = StatVel, data = data, geom = "text",
-    position = position,
+    stat = StatVel, data = NULL, geom = "text",
+    position = "identity",
     show.legend = FALSE,
-    inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm,
+    inherit.aes = TRUE,
+    params = list(na.rm = TRUE,
                   digits = digits,
                   direction = direction,
                   color = color,
@@ -95,6 +80,7 @@ geom_vel <- function(mapping = NULL,
                   ...)
   )
 }
+
 
 
 
@@ -142,7 +128,7 @@ plot_ensemble <- function(x, offset = 0, norm = TRUE) {
     theme(axis.title = element_text(face = "bold"))
 }
 
-# internal Stat function for annotation layers
+# internal Stat function for velocity annotation layers
 StatVel <- ggproto("StatVel",
                    Stat,
                    compute_layer = function (self, data, params, layout) {

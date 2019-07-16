@@ -14,6 +14,7 @@
 #' pw <- pulse_widths(dat, .9)
 pulse_widths <- function(x, p) {
   # for each row of x...(use foreach)
+  i <- NULL # keep R CMD check happy
   res <- foreach(i = 1:nrow(x)) %do% {
     # find max for that pulse ... x[i,]
     m <- max(x[i,])

@@ -15,9 +15,9 @@ time_to_peak <- function(x) {
  bl <- baseline(as.matrix(t(x)), method = 'rolling', wm = 5, ws = 5)@baseline
  pp <- find_peaks(x)
  ph <- peak_height(x)
-# for each peak,
+ i <- NULL # keep R CMD check happy
+
  res <- foreach(i = 1:length(pp)) %do% {
-  # set the threshold (10%)
     thr <- 0.1 * ph[i] + bl[pp[i]]
     start <- 0
     continue <- TRUE

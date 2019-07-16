@@ -8,6 +8,7 @@
 #' @return A dataframe with x (time index of max velocities) and velocity
 #' (the maximum velocity for each peak)
 #'
+#' @importFrom stats smooth.spline predict
 #' @export
 #'
 max_velocities <- function(x, offset = 0) {
