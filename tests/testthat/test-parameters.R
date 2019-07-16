@@ -41,7 +41,7 @@ test_that("Peak height can be calculated", {
   expect_equal(round(height[1], 1), 25.5)
 })
 
-test_that("%Peak can be calculated", {
+test_that("Peak can be calculated", {
   data(ca_flux)
   percent <- percent_peak(ca_flux$Mean1)
   expect_equal(round(percent[1], 4), 126.8591)
