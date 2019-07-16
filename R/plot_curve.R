@@ -144,11 +144,11 @@ StatVel <- ggproto("StatVel",
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
-                       y[vel$x.up] <- min(data$y) * 0.9
+                       y[vel$x.up] <- min(data$y) - 0.1 * diff(range(data$y))
                      } else {
                        v[vel$x.down] <- format(round(vel$velocity.down, params$digits),
                                                nsmall = params$digits)
-                       y[vel$x.down] <- max(data$y) * 1.1
+                       y[vel$x.down] <- max(data$y) + 0.1 * diff(range(data$y))
                      }
                      label= paste(v, "\u2192")
                      data$y <- y
@@ -166,7 +166,7 @@ StatPeak <- ggproto("StatPeak",
                     compute_layer = function (self, data, params, layout) {
                       peaks <- find_peaks(data$y, drop = 0)
                       data <- data[peaks, ]
-                      data$y <- 1.02 * data$y
+                      data$y <- data$y + 0.02 * diff(range(data$y))
                       data
                     },
                     required_aes = c("x", "y")

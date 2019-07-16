@@ -133,7 +133,8 @@ max_rates_ph(ca_flux$Mean2)
 
 # Plotting
 
-The cardiocyte package provides functionality to plot annotated transients.
+The cardiocyte package provides functionality to plot annotated transients, 
+both in their original form and as overlays (ensemble) of all peaks.
 
 ## Annotated transients with `plot_curve()`
 
@@ -141,6 +142,15 @@ We can plot the transients with the plot_curve function
 
 ```{r}
 plot_curve(ca_flux$Mean1)
+```
 
-plot_curve(ca_flux$Mean2)
+The package also implements annotations as ggplot layers so you can chain the 
+plots in the usual ggplot fashion:
+
+```{r}
+plot_curve(ca_flux$Mean1) +
+  geom_vel("up") +
+  geom_vel("down") +
+  geom_peaks()
+
 ```
