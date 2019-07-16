@@ -11,22 +11,12 @@ globalVariables(c("y", "size", "pulse"))
 #' @export
 #'
 plot_curve <- function(x) {
-  peaks <- find_peaks(x, drop =0)
-  cor <- correct_baseline(x)
-  cor <- x
-  peak_size <- rep(0, length(x))
-  peak_size[peaks] <- 1
-  gd <- data.frame(y = cor,
-                   x = 1:length(cor),
-                   size = peak_size)
+  gd <- data.frame(y = x,
+                   x = 1:length(x))
   ggplot(gd, aes(x = x, y = y)) +
     geom_line() +
-    #geom_point(aes(y = 1.02 * cor, alpha = size,
-    #               size = size),
-    #           show.legend = FALSE,
-    #           pch = 18, color = "#EB6221") +
-    xlab("Slice") +
-    ylab("Normalized signal") +
+    xlab("Time") +
+    ylab("Signal") +
     theme_bw() +
     scale_y_continuous(expand = c(.3, 0)) +
     scale_radius(range = c(0,2)) +
@@ -36,15 +26,12 @@ plot_curve <- function(x) {
 
 #' geom_vel
 #'
-#' @details Here are a bunch of details
-#'
 #' @param direction Default (\code{up}) is to annotate maximum upward velocity.
 #' Alternative is \code{down} to annotate maximum downward velocity.
 #' @param digits Number of digits to round/pad do in plot. Default is 3.
 #' @param cex Size for annotation text.
-#' @param color Color for annotation text. Default is dark green for upward
-#' velocity and dark red for downward velocity.
-#' @param ... Additioan arguments passed to gpplot layer.
+#' @param color Color for annotations.
+#' @param ... Additional arguments passed to gpplot layer.
 #'
 #' @rdname plots
 #' @return none. Called for side effect of generating plot layer
@@ -81,6 +68,25 @@ geom_vel <- function(direction = "up",
   )
 }
 
+#' geom_peaks
+#'
+#'
+#' @rdname plots
+#' @return none. Called for side effect of generating plot layer
+#' @importFrom ggplot2 geom_text
+#' @export
+#'
+geom_peaks <- function(color = "#EB6221", ...) {
+  layer(
+    stat = StatPeak, data = NULL, geom = "point",
+    position = "identity",
+    show.legend = FALSE,
+    inherit.aes = TRUE,
+    params = list(na.rm = TRUE,
+                  color = color,
+                  ...)
+  )
+}
 
 
 
@@ -138,11 +144,11 @@ StatVel <- ggproto("StatVel",
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
-                       y[vel$x.up] <- min(data$y) * 0.9
+                       y[vel$x.up] <- min(data$y) - 0.1 * diff(range(data$y))
                      } else {
                        v[vel$x.down] <- format(round(vel$velocity.down, params$digits),
                                                nsmall = params$digits)
-                       y[vel$x.down] <- max(data$y) * 1.1
+                       y[vel$x.down] <- max(data$y) + 0.1 * diff(range(data$y))
                      }
                      label= paste(v, "\u2192")
                      data$y <- y
@@ -154,28 +160,14 @@ StatVel <- ggproto("StatVel",
                    required_aes = c("x", "y")
 )
 
-# internal Stat function for annotation layers
+# internal Stat function for peak annotation layer
 StatPeak <- ggproto("StatPeak",
                     Stat,
                     compute_layer = function (self, data, params, layout) {
-                      y <- rep(NA, nrow(data))
-                      v <- rep(NA, nrow(data))
-                      vel <- max_velocities(data$y)
-                      if(params$direction == "up") {
-                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
-                                              nsmall = params$digits)
-                        y[vel$x.up] <- min(data$y) * 0.9
-                      } else {
-                        v[vel$x.down] <- format(round(vel$velocity.down, params$digits),
-                                                nsmall = params$digits)
-                        y[vel$x.down] <- max(data$y) * 1.1
-                      }
-                      label= paste(v, "\u2192")
-                      data$y <- y
-                      data$label <- label
+                      peaks <- find_peaks(data$y, drop = 0)
+                      data <- data[peaks, ]
+                      data$y <- data$y + 0.02 * diff(range(data$y))
                       data
-                    },
-                    compute_group = function(self, data, scales, na.rm, digits, direction) {
                     },
                     required_aes = c("x", "y")
 )
