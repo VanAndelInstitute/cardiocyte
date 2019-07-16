@@ -154,3 +154,32 @@ plot_curve(ca_flux$Mean1) +
   geom_peaks()
 
 ```
+
+The effects of baseline correction can then be directly visualized.
+
+```{r}
+plot_curve(ca_flux$Mean1) +
+  geom_vel("up") +
+  geom_vel("down") +
+  geom_peaks()
+
+```
+
+
+Finally, the curves can be extracted an overlaid in an ensemble plot together 
+with an averaged curve with error bounds.The offset parameter indicates how 
+many time points to drop at the start of the acquisition to assist in centering 
+the curves in the ensemble window.
+
+```{r}
+plot_ensemble(ca_flux$Mean1, offset = 3, norm=FALSE) 
+```
+
+To account for bleaching over the time course, the curves can be normalized to 
+standardized heights.
+
+```{r}
+plot_ensemble(ca_flux$Mean1, offset = 3, norm=TRUE) 
+```
+
+
