@@ -6,7 +6,7 @@ test_that("Peak detection", {
   peaks <- find_peaks(signal, drop = 1)
   expect_equal(length(peaks), 23)
   sp <- sum(find_peaks(ca_flux$Mean1))
-  expect_equal(sp, 2166) # issue #1
+  expect_equal(sp, 2358) # issue #1
 })
 
 test_that("Esemble pulses", {
@@ -68,5 +68,7 @@ test_that("Max Rates per Baseline can be calculated", {
 test_that("Max Rates per peak height can be calculated", {
   data(ca_flux)
   rates <- max_rates_ph(ca_flux$Mean4)
-  expect_equal(round(rates[1], 3), 0.394)
+  expect_equal(round(rates[1], 3), 0.388)
+  rates <- max_rates_ph(ca_flux$Mean1)
+  expect_equal(round(rates[1], 3), 0.236)
 })

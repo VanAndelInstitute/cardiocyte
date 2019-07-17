@@ -158,7 +158,7 @@ plot_curve(ca_flux$Mean1) +
 The effects of baseline correction can then be directly visualized.
 
 ```{r}
-plot_curve(ca_flux$Mean1) +
+plot_curve(correct_baseline(ca_flux$Mean1)) +
   geom_vel("up") +
   geom_vel("down") +
   geom_peaks()

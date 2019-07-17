@@ -11,20 +11,21 @@
 #'
 #' @return vector of indices of x where peaks are
 #' @importFrom seewave hilbert bwfilter
+#' @importFrom pracma findpeaks
 #' @export
 #'
 #' @examples
 #' data(ca_flux)
 #' a <- find_peaks(ca_flux$Mean1)
-find_peaks <- function(x, f = 5, drop=1) {
-  sm <- smooth.spline(x)
-  hil <- Im(hilbert(sm$y, f))
-  hil <- correct_baseline(hil)
+find_peaks <- function(x, f = 5, drop=0) {
+  #sm <- smooth.spline(correct_baseline(x))
+  #hil <- Im(hilbert(sm$y, f))
+  #hil <- correct_baseline(hil)
 
   # peaks are where hilbert transform crosses zero.
-  peaks <- which(diff(sign(hil)) > 0)
+  #peaks <- which(diff(sign(hil)) > 0)
+  peaks <- findpeaks(smooth.spline(correct_baseline(x))$y)[,2]
   peaks <- .check_peaks(x, peaks)
-
   if(drop > 0) {
     peaks <- peaks[-c(1:drop)]
   }
