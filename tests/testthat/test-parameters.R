@@ -72,3 +72,9 @@ test_that("Max Rates per peak height can be calculated", {
   rates <- max_rates_ph(ca_flux$Mean4)
   expect_equal(round(rates[1], 3), 0.388)
 })
+
+test_that("transient integral can be calculated", {
+  data(ca_flux)
+  integral <- trans_integral(ca_flux$Mean1)
+  expect_equal(round(integral, 2), 1051.02)
+})
