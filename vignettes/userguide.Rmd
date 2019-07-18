@@ -27,9 +27,9 @@ library(cardiocyte)
 
 # Peak metrics
 
-## Identify pikes with `find_peaks()`
+## Identify peaks with `find_peaks()`
 
-this function takes a dataset from an ImageJ image stack (A video of calcium flux in a cardiomyocyte, in this case **"ca_flux"**), as well as a Mean from a chosen ROI (region of interest, usually membrane surface above cytoplasm), and returns the slice where each peak is located. 
+this function takes a vector of time series data quantifying a transient (in this case from a video of calcium flux in a cardiomyocyte, **"ca_flux"**), and returns the location where each peak is located. 
 
 Example (using ca_flux as the dataset, ROI 1, and ROI 2): 
 ```{r}
@@ -40,18 +40,29 @@ find_peaks(ca_flux$Mean2)
 ```
 
 
-## peak_height()
+## Establish a baseline with `correct_baseline()`
 
-this function takes the ImageJ dataset, as well as the Mean from a chosen ROI, and returns the height of each peak (the y value, or the maximum quantified calcium flux deviation from the established baseline). 
+This function corrects any transient deviation from a baseline, i.e. it makes sure every peak of the transient deviates from the same baseline value. The function takes a vector of time series data quantifying a transient. This function is especially useful when plotting a curve, and can be used in combination with the plot_curve() function (as seen in section 3: Plotting)
+
+```{r}
+bl_corrected <- correct_baseline(ca_flux$Mean1)
+
+```
+
+## Find the height of peaks with `peak_height()`
+
+This function takes a vector of time series data quantifying a transient, and returns  the height of each peak (the y value, or the maximum deviation from the established baseline). 
 
 ```{r}
 peak_height(ca_flux$Mean1)
 
 peak_height(ca_flux$Mean2)
 ```
-## ensemble()
 
-This function takes an ImageJ dataset and a specified ROI and extracts all the curves from the ImageJ trace data. 
+
+## Extract curves with `ensemble()`
+
+This function takes a vector of time series data quantifying a transient, and extracts all the curves from the trace data. 
 
 ```{r}
 (dat <- ensemble(ca_flux$Mean1))
@@ -59,7 +70,8 @@ This function takes an ImageJ dataset and a specified ROI and extracts all the c
 dat2 <- ensemble(ca_flux$Mean2)
 ```
 
-## pulse_widths()
+
+## Find the widths of pulses with `pulse_widths()`
 
 This function calculates the widths of pulses. It takes data from an ensemble() matrix (as described above), as well as a specified percentile (p) of the max at which to calculate width. 
 
@@ -71,9 +83,10 @@ pulse_widths(dat2, .9)
 pulse_widths(dat, .8)
 ```
 
-## time_to_peak()
 
-This function calculates the time (in slices) that it takes for a pulse to reach its maximum. The function an ImageJ dataset and an ROI Mean and starts calculating time when the pulse reaches 10% of the peak height. It returns the time calculated for the pulse to go from 10% to maximum peak height. 
+## Find the time it takes to reach a peak with `time_to_peak()`
+
+This function calculates the time that it takes for a pulse to reach its maximum. The function takes a vector of time series data quantifying a transient, and starts calculating time when the value reaches 10% of the peak height. It returns the time calculated for the pulse to go from 10% to maximum peak height. 
 
 ```{r}
 time_to_peak(ca_flux$Mean1)
@@ -81,9 +94,9 @@ time_to_peak(ca_flux$Mean1)
 time_to_peak(ca_flux$Mean2)
 ```
 
-## percent_peak()
+## Find the peak as a percent of the baseline with `percent_peak()`
 
-This function divides the locations of each peak by the baseline calcium flux value at each peak, then multiplies by 100. The function takes an ImageJ dataset and the Mean from a chosen ROI. 
+This function divides the locations of each peak by the baseline value at each peak, then multiplies by 100. The function takes takes a vector of time series data quantifying a transient.
 
 ```{r}
 percent_peak(ca_flux$Mean1)
@@ -91,9 +104,9 @@ percent_peak(ca_flux$Mean1)
 percent_peak(ca_flux$Mean2)
 ```
 
-## percent_peak_height()
+## Find peak height as a percent of the baseline with `percent_peak_height()`
 
-This function divides the heights of each peak by the baseline calcium flux value at each peak, then multiplies by 100. The function takes an ImageJ dataset and the Mean from a chosen ROI. 
+This function divides the heights of each peak by the baseline value at each peak, then multiplies by 100. The function takes a vector of time series data quantifying a transient.
 
 ```{r}
 percent_peak_height(ca_flux$Mean1)
@@ -102,18 +115,18 @@ percent_peak_height(ca_flux$Mean2)
 ```
 
 
-## max_velocities()
+## Find pulse velocity with `max_velocities()`
 
-This function returns the maximum velocity of the transient, or the maximum slope (positive and negative) of the peaks on a visualized graph of an ImageJ dataset. The function takes an ImageJ dataset and the Mean from a chosen ROI, and returns both the slices where the maximum up (x.up) and down (x.down) velocities are located, as well as the values for the maximum up and down velocities. 
+This function returns the maximum velocity of the transient, or the maximum slope (positive and negative) of the peaks. The function takes a vector of time series data quantifying a transient, and returns both the locations of the maximum up (x.up) and down (x.down) velocities, as well as the values for the maximum up and down velocities. 
 
 ```{r}
 max_velocities(ca_flux$Mean1)
 
 ```
 
-## max_rates_baseline()
+## Find velocity as a percent of the baseline with `max_rates_baseline()`
 
-This function divides the maximum transient velocity of each peak by the baseline calcium flux at the point where the transient reaches its maximum velocity. 
+This function divides the maximum transient velocity of each peak by the baseline value at the point where the transient reaches its maximum velocity. 
 
 ```{r}
 max_rates_bl(ca_flux$Mean1)
@@ -121,7 +134,7 @@ max_rates_bl(ca_flux$Mean1)
 max_rates_bl(ca_flux$Mean2)
 ```
 
-## max_rates_ph()
+## Find velocity as a percent of peak height with `max_rates_ph()`
 
 This function divides the maximum transient velocity of each peak by the height of that specific peak. 
 
