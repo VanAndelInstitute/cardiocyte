@@ -7,6 +7,7 @@
 #' @return vector containing the peak %
 #' @export
 #' @importFrom baseline baseline
+#' @importFrom DescTools AUC
 #' @examples
 #' data(ca_flux)
 #' dat <- trans_integral(ca_flux$Mean1)
@@ -18,7 +19,6 @@ trans[trans < 0] <- 0
   #set the x axis from which to calculate the area
 x <- c(1:length(trans))
   #calculate the area using the AUC function from package "DescTools"
-library("DescTools")
 area <- AUC(x = x, y = trans, method = "trapezoid", na.rm = TRUE)
 return(area)
 }
