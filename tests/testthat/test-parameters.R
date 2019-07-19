@@ -78,3 +78,9 @@ test_that("transient integral can be calculated", {
   integral <- trans_integral(ca_flux$Mean1)
   expect_equal(round(integral, 2), 1051.02)
 })
+
+test_that("ctf can be calculated", {
+  data(ca_flux)
+  diff <- ctf(ca_flux$Mean1, ca_flux$Mean4)
+  expect_equal(diff[1], -0.589)
+})
