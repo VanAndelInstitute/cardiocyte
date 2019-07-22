@@ -4,7 +4,7 @@
 #'
 #' @param x vector of trace data
 #'
-#' @return vector containing the peak %
+#' @return the area under the transient
 #' @export
 #' @importFrom baseline baseline
 #' @importFrom DescTools AUC
