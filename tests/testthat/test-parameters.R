@@ -91,3 +91,9 @@ test_that("peak integral can be calculated", {
   expect_equal(round(integral, 1), 55.3)
 })
 
+test_that("peak integrals can be calculated", {
+  data(ca_flux)
+  aucs <- peak_integrals(ca_flux$Mean1)
+  expect_equal(round(aucs[1],1), 55.3)
+})
+
