@@ -154,19 +154,10 @@ trans_integral(ca_flux$Mean1)
 trans_integral(ca_flux$Mean2)
 ```
 
-## Find the area under a specific peak with `integrate_peak()`
-
-This function returns the area of a specified peak in a transient. The function takes a vector of time series data quantifying a transient, as well as a specified peak number. 
-
-```{r}
-integrate_peak(ca_flux$Mean1, 1)
-
-integrate_peak(ca_flux$Mean2, 14)
-```
 
 ## Find the area under each peak with `peak_integrals()`
 
-This function simply returns the area under every peak in a transient. 
+This function returns the area under every peak in a transient. 
 
 ```{r}
 peak_integrals(ca_flux$Mean1)
