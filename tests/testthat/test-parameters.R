@@ -87,7 +87,7 @@ test_that("ctf can be calculated", {
 
 test_that("peak integral can be calculated", {
   data(ca_flux)
-  integral <- peak_integral(ca_flux$Mean1, 1)
+  integral <- integrate_peak(ca_flux$Mean1, 1)
   expect_equal(round(integral, 1), 55.3)
 })
 
