@@ -92,3 +92,8 @@ test_that("peak integrals can be calculated", {
   expect_equal(round(aucs[1],1), 55.3)
 })
 
+test_that("FFT can be calculated", {
+  data(ca_flux)
+  fftrans <- FFT(ca_flux$Mean1, 20)
+  expect_equal(round(fftrans[1],1), 95.5)
+})
