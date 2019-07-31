@@ -53,7 +53,7 @@ geom_vel <- function(direction = "up",
     srt <- 270
   }
 
-  layer(
+  a <- layer(
     stat = StatVel, data = NULL, geom = "text",
     position = "identity",
     show.legend = FALSE,
@@ -66,6 +66,19 @@ geom_vel <- function(direction = "up",
                   srt = srt,
                   ...)
   )
+  b <- layer(
+    stat = StatVel, data = NULL, geom = "vline",
+    position = "identity",
+    show.legend = FALSE,
+    inherit.aes = TRUE,
+    params = list(na.rm = TRUE,
+                  digits = digits,
+                  direction = direction,
+                  color = color,
+                  alpha=0.1,
+                  ...)
+  )
+  list(a,b)
 }
 
 #' geom_peaks
@@ -140,18 +153,22 @@ StatVel <- ggproto("StatVel",
                    compute_layer = function (self, data, params, layout) {
                      y <- rep(NA, nrow(data))
                      v <- rep(NA, nrow(data))
+                     xi <- rep(NA, nrow(data))
                      vel <- max_velocities(data$y)
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
                        y[vel$x.up] <- min(data$y) - 0.1 * diff(range(data$y))
+                       xi[vel$x.up] <- vel$x.up
                      } else {
                        v[vel$x.down] <- format(round(vel$velocity.down, params$digits),
                                                nsmall = params$digits)
                        y[vel$x.down] <- max(data$y) + 0.1 * diff(range(data$y))
+                       xi[vel$x.down] <- vel$x.down
                      }
                      label= paste(v, "\u2192")
                      data$y <- y
+                     data$xintercept <- xi
                      data$label <- label
                      data
                    },
