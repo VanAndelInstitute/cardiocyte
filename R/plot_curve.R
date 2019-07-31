@@ -89,7 +89,7 @@ geom_vel <- function(direction = "up",
 #' @importFrom ggplot2 geom_text
 #' @export
 #'
-geom_peaks <- function(color = "#EB6221", ...) {
+geom_peaks <- function(color = "#EB6221", p = 0, ...) {
   layer(
     stat = StatPeak, data = NULL, geom = "point",
     position = "identity",
@@ -97,6 +97,7 @@ geom_peaks <- function(color = "#EB6221", ...) {
     inherit.aes = TRUE,
     params = list(na.rm = TRUE,
                   color = color,
+                  p = p,
                   ...)
   )
 }
@@ -181,10 +182,12 @@ StatVel <- ggproto("StatVel",
 StatPeak <- ggproto("StatPeak",
                     Stat,
                     compute_layer = function (self, data, params, layout) {
-                      peaks <- find_peaks(data$y, drop = 0)
+                      peaks <- find_peaks(data$y, drop = 0, p = params$p)
                       data <- data[peaks, ]
                       data$y <- data$y + 0.02 * diff(range(data$y))
                       data
+                    },
+                    compute_group = function(self, data, scales, na.rm, p){
                     },
                     required_aes = c("x", "y")
 )
