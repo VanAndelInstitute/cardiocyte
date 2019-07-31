@@ -32,7 +32,7 @@ test_that("Pulse width can be calculated", {
 test_that("Max velocities can be calculated", {
   data(ca_flux)
   vels <- max_velocities(ca_flux$Mean1)
-  expect_equal(vels$velocity.up[1], 6.024089, tolerance = 1e-3)
+  expect_equal(round(vels$velocity.up[1],2), 7.84)
 })
 
 test_that("Peak height can be calculated", {
@@ -62,15 +62,15 @@ test_that("Time to Peak", {
 test_that("Max Rates per Baseline can be calculated", {
   data(ca_flux)
   rates <- max_rates_bl(ca_flux$Mean1)
-  expect_equal(round(rates[1], 4), .0635)
+  expect_equal(round(rates[1], 4), .0826)
 })
 
 test_that("Max Rates per peak height can be calculated", {
   data(ca_flux)
   rates <- max_rates_ph(ca_flux$Mean1)
-  expect_equal(round(rates[1], 3), 0.236)
+  expect_equal(round(rates[1], 3), 0.308)
   rates <- max_rates_ph(ca_flux$Mean4)
-  expect_equal(round(rates[1], 3), 0.388)
+  expect_equal(round(rates[1], 3), 0.482)
 })
 
 test_that("transient integral can be calculated", {

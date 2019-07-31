@@ -30,6 +30,8 @@ plot_curve <- function(x) {
 #' Alternative is \code{down} to annotate maximum downward velocity.
 #' @param digits Number of digits to round/pad do in plot. Default is 3.
 #' @param cex Size for annotation text.
+#' @param smoothness How much smoothing to peform (see ?max_velocites)
+#' @param p Dampening factor to remove small wavelets (see ?find_peaks)
 #' @param color Color for annotations.
 #' @param ... Additional arguments passed to gpplot layer.
 #'
@@ -41,6 +43,8 @@ plot_curve <- function(x) {
 geom_vel <- function(direction = "up",
                      digits = 3,
                      cex = 2.5,
+                     smoothness = 0,
+                     p = 0,
                      color = NA,
                      ...) {
   if(direction == "up") {
@@ -62,6 +66,8 @@ geom_vel <- function(direction = "up",
                   digits = digits,
                   direction = direction,
                   color = color,
+                  smoothness = smoothness,
+                  p = p,
                   cex = cex,
                   srt = srt,
                   ...)
@@ -75,6 +81,8 @@ geom_vel <- function(direction = "up",
                   digits = digits,
                   direction = direction,
                   color = color,
+                  p = p,
+                  smoothness = smoothness,
                   alpha=0.1,
                   ...)
   )
@@ -155,7 +163,9 @@ StatVel <- ggproto("StatVel",
                      y <- rep(NA, nrow(data))
                      v <- rep(NA, nrow(data))
                      xi <- rep(NA, nrow(data))
-                     vel <- max_velocities(data$y)
+                     vel <- max_velocities(data$y,
+                                           p = params$p,
+                                           smooth = params$smooth)
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
@@ -173,7 +183,14 @@ StatVel <- ggproto("StatVel",
                      data$label <- label
                      data
                    },
-                   compute_group = function(self, data, scales, na.rm, digits, direction) {
+                   compute_group = function(self,
+                                            data,
+                                            scales,
+                                            na.rm,
+                                            digits,
+                                            smoothness,
+                                            p,
+                                            direction) {
                    },
                    required_aes = c("x", "y")
 )
