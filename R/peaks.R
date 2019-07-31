@@ -8,16 +8,18 @@
 #' @param x a vector of data to find peaks in
 #' @param f signal frequency. Default is 5Hz.
 #' @param drop number of intial observations to drop. Default is 1.
+#' @param p a percentage of the highest peak with which to limit the results (in the case of lots of noisy peaks). Default is 0
 #'
 #' @return vector of indices of x where peaks are
 #' @importFrom seewave hilbert bwfilter
 #' @importFrom pracma findpeaks
+#' @importFrom dplyr filter
 #' @export
 #'
 #' @examples
 #' data(ca_flux)
 #' a <- find_peaks(ca_flux$Mean1)
-find_peaks <- function(x, f = 5, drop=0) {
+find_peaks <- function(x, f = 5, drop=0, p = 0) {
   #sm <- smooth.spline(correct_baseline(x))
   #hil <- Im(hilbert(sm$y, f))
   #hil <- correct_baseline(hil)
@@ -29,7 +31,9 @@ find_peaks <- function(x, f = 5, drop=0) {
   if(drop > 0) {
     peaks <- peaks[-c(1:drop)]
   }
-  peaks
+  heights <- data.frame(V1 = peaks, V2 = x[peaks])
+  heights <- heights[which(heights$V2  > p*max(heights$V2)), ]
+  heights$V1
 }
 
 # internal function to clean up peak misses from hilbert
