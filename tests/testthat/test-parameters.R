@@ -97,3 +97,9 @@ test_that("FFT can be calculated", {
   fftrans <- FFT(ca_flux$Mean1, 20)
   expect_equal(round(fftrans[1],1), 95.5)
 })
+
+test_that("BPM can be calculated", {
+  data(ca_flux)
+  BPM <- bpm(ca_flux$Mean1, 10)
+  expect_equal(round(BPM,1), 73.8)
+})
