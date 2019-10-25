@@ -7,6 +7,7 @@
 #'
 #' @return a vector of the transformed data
 #' @export
+#' @importFrom stats fft
 #' @examples
 #' data(ca_flux)
 #' dat <- FFT(ca_flux$Mean1, 20)

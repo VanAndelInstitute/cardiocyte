@@ -1,12 +1,10 @@
 #' find_peaks
 #'
-#' Find peaks in signal using hilbert transform. Note that this approach
-#' works better if the signal is not baseline corrected. The first peak
+#' Find peaks in signal. The first peak
 #' is often spurious (the result of catching a transient in the middle),
 #' so the drop parameter defaults to 1.
 #'
 #' @param x a vector of data to find peaks in
-#' @param f signal frequency. Default is 5Hz.
 #' @param drop number of intial observations to drop. Default is 1.
 #' @param p a percentage of the highest peak with which to limit the results (in the case of lots of noisy peaks). Default is 0
 #'
@@ -19,8 +17,13 @@
 #' @examples
 #' data(ca_flux)
 #' a <- find_peaks(ca_flux$Mean1)
-find_peaks <- function(x, f = 5, drop=0, p = 0) {
-  peaks <- findpeaks(smooth.spline(correct_baseline(x))$y)[,2]
+find_peaks <- function(x, drop=0, p = 0, smooth=TRUE, correct=TRUE) {
+  d <- x
+  if(correct)
+    d <- correct_baseline(d)
+  if(smooth)
+    d <- smooth.spline(d)$y
+  peaks <- findpeaks(d)[,2]
   peaks <- .check_peaks(x, peaks)
   if(drop > 0) {
     peaks <- peaks[-c(1:drop)]

@@ -12,7 +12,10 @@ Authors@R:
            email = "eric.kort@vai.org")
 Description: What the package does (one paragraph).
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.5.0),
+    DescTools,
+    dplyr,
+    pracma
 Imports:
     baseline,
     ggplot2,

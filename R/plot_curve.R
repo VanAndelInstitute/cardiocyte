@@ -32,6 +32,8 @@ plot_curve <- function(x) {
 #' @param cex Size for annotation text.
 #' @param smoothness How much smoothing to peform (see ?max_velocites)
 #' @param p Dampening factor to remove small wavelets (see ?find_peaks)
+#' @param correct Weather to correct baseline (see ?find_peaks)
+#' @param smooth Weather to smooth prior to peak finding (see ?find_peaks)
 #' @param color Color for annotations.
 #' @param ... Additional arguments passed to gpplot layer.
 #'
@@ -45,6 +47,8 @@ geom_vel <- function(direction = "up",
                      cex = 2.5,
                      smoothness = 0,
                      p = 0,
+                     correct = TRUE,
+                     smooth = TRUE,
                      color = NA,
                      ...) {
   if(direction == "up") {
@@ -67,6 +71,8 @@ geom_vel <- function(direction = "up",
                   direction = direction,
                   color = color,
                   smoothness = smoothness,
+                  smooth = smooth,
+                  correct = correct,
                   p = p,
                   cex = cex,
                   srt = srt,
@@ -83,6 +89,8 @@ geom_vel <- function(direction = "up",
                   color = color,
                   p = p,
                   smoothness = smoothness,
+                  smooth = smooth,
+                  correct = correct,
                   alpha=0.1,
                   ...)
   )
@@ -97,7 +105,11 @@ geom_vel <- function(direction = "up",
 #' @importFrom ggplot2 geom_text
 #' @export
 #'
-geom_peaks <- function(color = "#EB6221", p = 0, ...) {
+geom_peaks <- function(color = "#EB6221",
+                       correct = TRUE,
+                       smooth = TRUE,
+                       p = 0,
+                       ...) {
   layer(
     stat = StatPeak, data = NULL, geom = "point",
     position = "identity",
@@ -106,6 +118,8 @@ geom_peaks <- function(color = "#EB6221", p = 0, ...) {
     params = list(na.rm = TRUE,
                   color = color,
                   p = p,
+                  correct = correct,
+                  smooth = smooth,
                   ...)
   )
 }
@@ -119,14 +133,15 @@ geom_peaks <- function(color = "#EB6221", p = 0, ...) {
 #' @param x a vector of data
 #' @param offset Move the sliding window offset time points  if desired
 #' @param norm Should each pulse be normalized to [0,1]?
+#' @param ... Additional arguments passed to gpplot layer.
 #'
 #' @return none. Called for side effect of generating plot
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @export
 #'
-plot_ensemble <- function(x, offset = 0, norm = TRUE) {
-  dat <- ensemble(x, offset, norm)
+plot_ensemble <- function(x, offset = 0, norm = TRUE, ...) {
+  dat <- ensemble(x, offset, norm, ...)
   dat <- melt(dat)
   colnames(dat) <- c("pulse", "x", "y")
   if (norm) {
@@ -165,7 +180,8 @@ StatVel <- ggproto("StatVel",
                      xi <- rep(NA, nrow(data))
                      vel <- max_velocities(data$y,
                                            p = params$p,
-                                           smooth = params$smooth)
+                                           smooth = params$smooth,
+                                           correct = params$correct)
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
@@ -189,6 +205,8 @@ StatVel <- ggproto("StatVel",
                                             na.rm,
                                             digits,
                                             smoothness,
+                                            smooth,
+                                            correct,
                                             p,
                                             direction) {
                    },
@@ -199,12 +217,22 @@ StatVel <- ggproto("StatVel",
 StatPeak <- ggproto("StatPeak",
                     Stat,
                     compute_layer = function (self, data, params, layout) {
-                      peaks <- find_peaks(data$y, drop = 0, p = params$p)
+                      peaks <- find_peaks(data$y,
+                                          drop = 0,
+                                          p = params$p,
+                                          smooth = params$smooth,
+                                          correct = params$correct)
                       data <- data[peaks, ]
                       data$y <- data$y + 0.02 * diff(range(data$y))
                       data
                     },
-                    compute_group = function(self, data, scales, na.rm, p){
+                    compute_group = function(self,
+                                             data,
+                                             scales,
+                                             smooth,
+                                             correct,
+                                             na.rm,
+                                             p){
                     },
                     required_aes = c("x", "y")
 )

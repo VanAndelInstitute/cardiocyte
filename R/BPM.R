@@ -4,7 +4,8 @@
 #'
 #' @param x vector of trace data
 #' @param framerate the framerate
-#'
+#' @param ... additional parameters to pass to find_peaks
+
 #' @return The BPM of the transient
 #' @export
 #' @importFrom baseline baseline
@@ -12,8 +13,8 @@
 #' @examples
 #' data(ca_flux)
 #' dat <- bpm(ca_flux$Mean1)
-bpm <- function(x, framerate) {
-BPF <- length(find_peaks(x))/length(x)
+bpm <- function(x, framerate, ...) {
+BPF <- length(find_peaks(x, ...))/length(x)
 BPM <- BPF * framerate *60
 return(BPM)
 }

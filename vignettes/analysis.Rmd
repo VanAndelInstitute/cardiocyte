@@ -1,0 +1,18 @@
+---
+title: "Pacemaker Project"
+author: "Eric Kort"
+date: "10/8/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Calcium Flux
+
+```{r}
+library(cardiocyte)
+dat <- read.delim("data/results_1.csv", sep=",", header=TRUE, as.is=TRUE)
+
+```

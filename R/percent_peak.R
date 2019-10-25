@@ -3,6 +3,7 @@
 #' Calculate the % of the peaks compared to the baseline
 #'
 #' @param x vector of trace data
+#' @param ... additional parameters to pass to find_peaks
 #'
 #' @return vector containing the peak %
 #' @export
@@ -10,9 +11,9 @@
 #' @examples
 #' data(ca_flux)
 #' ph <- percent_peak(ca_flux$Mean1)
-percent_peak <- function(x) {
+percent_peak <- function(x, ...) {
   # find the location of the peaks
-    peaks <- find_peaks(x)
+    peaks <- find_peaks(x, ...)
       # find the baseline for each peak
     bl <- baseline(as.matrix(t(x)), method = 'rolling', wm = 5, ws = 5)
       # divide the baseline from the peak value and multiply by 100
