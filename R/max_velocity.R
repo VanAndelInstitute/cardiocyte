@@ -22,14 +22,12 @@ max_velocities <- function(x,
                            smooth = TRUE,
                            correct = TRUE,
                            smoothness = 0,
-                           p = 0,
-                           ...) {
-  x <- smooth.spline(x, spar=smoothness, nknots = round((1-smoothness)*length(x)))
-  x.prime <- predict(x, deriv = 1)
-  peaks.u <- find_peaks(x.prime$y, p = p, drop = 0, smooth = smooth, correct = correct, ...)
-  peaks.d <- find_peaks(x.prime$y, p = p, drop = 0, smooth = smooth, correct = correct, ...)
-  list(x.up = peaks.u,
-             x.down = peaks.d,
-             velocity.up = x.prime$y[peaks.u],
-             velocity.down = x.prime$y[peaks.d])
+                           p = 0
+                           , ...) {
+  dat_x <- smooth.spline(x, spar=0)
+  dat <- smooth.spline(x, spar=smoothness, nknots = round((1-smoothness)*length(dat_x)))
+  x.prime <- predict(dat, deriv=1)
+  peaks.u <- find_peaks(x.prime$y, p=p, drop=0, smooth=smooth, correct=correct, ...)
+  peaks.d <- find_peaks(x.prime$y, p=p, drop=0, smooth=smooth, correct=correct, ...)
+  list (x.up = peaks.u, x.down = peaks.d, velocity.up = x.prime$y[peaks.u], velocity.down = x.prime$y[peaks.d])
 }

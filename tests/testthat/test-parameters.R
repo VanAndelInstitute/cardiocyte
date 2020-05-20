@@ -15,7 +15,7 @@ test_that("Esemble pulses", {
   dat <- ensemble(signal, norm = FALSE)
   expect_equal(nrow(dat), 22)
   expect_equal(ncol(dat), 9)
-  expect_equal(round(sum(dat), 1), 17540.6)
+  expect_equal(round(sum(dat), 1), 17535.3)
 
   dat <- ensemble(signal, norm = TRUE)
   expect_equal(max(dat), 1)
@@ -32,7 +32,7 @@ test_that("Pulse width can be calculated", {
 test_that("Max velocities can be calculated", {
   data(ca_flux)
   vels <- max_velocities(ca_flux$Mean1)
-  expect_equal(round(vels$velocity.up[1],2), 7.84)
+  expect_equal(round(vels$velocity.up[1],2), 0.06)
 })
 
 test_that("Peak height can be calculated", {
@@ -62,15 +62,15 @@ test_that("Time to Peak", {
 test_that("Max Rates per Baseline can be calculated", {
   data(ca_flux)
   rates <- max_rates_bl(ca_flux$Mean1)
-  expect_equal(round(rates[1], 4), .0826)
+  expect_equal(round(rates[1], 4), 7e-04)
 })
 
 test_that("Max Rates per peak height can be calculated", {
   data(ca_flux)
   rates <- max_rates_ph(ca_flux$Mean1)
-  expect_equal(round(rates[1], 3), 0.308)
+  expect_equal(round(rates[1], 3), 0.002)
   rates <- max_rates_ph(ca_flux$Mean4)
-  expect_equal(round(rates[1], 3), 0.482)
+  expect_equal(round(rates[1], 3), 0.022)
 })
 
 test_that("transient integral can be calculated", {
@@ -89,7 +89,7 @@ test_that("ctf can be calculated", {
 test_that("peak integrals can be calculated", {
   data(ca_flux)
   aucs <- peak_integrals(ca_flux$Mean1)
-  expect_equal(round(aucs[1],1), 55.3)
+  expect_equal(round(aucs[1],1), 56.1)
 })
 
 test_that("FFT can be calculated", {
