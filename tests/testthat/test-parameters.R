@@ -103,3 +103,9 @@ test_that("BPM can be calculated", {
   BPM <- bpm(ca_flux$Mean1, 10)
   expect_equal(round(BPM,1), 73.8)
 })
+
+test_that("peak velocities can be calculated", {
+  data(ca_flux)
+  peaks <- peak_vels(ca_flux$Mean1)
+  expect_equal(round(peaks[1],1), 6.7)
+})

@@ -139,7 +139,7 @@ percent_peak_height(sarc$Y)
 
 ## Find pulse velocity with `max_velocities()`
 
-This function returns the maximum velocities of the transient, or the maximum slopes (positive and negative) of the peaks. The function takes a vector of time series data quantifying a transient, and returns both the locations of the maximum up (x.up) and down (x.down) velocities, as well as the values for the maximum up and down velocities. 
+This function returns the maximum velocities of the transient. The function takes a vector of time series data quantifying a transient, and returns both the locations of the maximum up (x.up) and down (x.down) velocities, as well as the values for the maximum up and down velocities. 
 
 ```{r}
 max_velocities(ca_flux$Mean1)
