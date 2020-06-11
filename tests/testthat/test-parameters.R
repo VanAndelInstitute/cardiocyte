@@ -104,8 +104,8 @@ test_that("BPM can be calculated", {
   expect_equal(round(BPM,1), 73.8)
 })
 
-test_that("peak velocities can be calculated", {
+test_that("Max peak velocities can be calculated", {
   data(ca_flux)
-  peaks <- peak_vels(ca_flux$Mean1)
-  expect_equal(round(peaks[1],1), 6.7)
+  vels <- max_vels(ca_flux$Mean1)
+  expect_equal(round(vels$velocity.up[1],2), 6.02)
 })

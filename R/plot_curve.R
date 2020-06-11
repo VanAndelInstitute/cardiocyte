@@ -178,10 +178,8 @@ StatVel <- ggproto("StatVel",
                      y <- rep(NA, nrow(data))
                      v <- rep(NA, nrow(data))
                      xi <- rep(NA, nrow(data))
-                     vel <- max_velocities(data$y,
-                                           p = params$p,
-                                           smooth = params$smooth,
-                                           correct = params$correct)
+                     vel <- max_vels(data$y,
+                                          )
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
