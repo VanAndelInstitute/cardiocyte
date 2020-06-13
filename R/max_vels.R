@@ -11,15 +11,15 @@
 #' @export
 #'
 max_vels <- function(x, p = 0, ...) {
-  smooth <- smooth.spline(x, ...)
+  smooth <- smooth.spline(x)
   derivs <- predict(smooth, deriv = 1)
 
 
-    max.xs <- find_peaks(derivs$y, ...)
+    max.xs <- find_peaks(derivs$y, p=p, ...)
     max.vs <- derivs$y
     max.vs <- max.vs[max.xs]
 
-    min.xs <- find_peaks(-1*derivs$y, ...)
+    min.xs <- find_peaks(-1*derivs$y, p=p, ...)
     min.vs <- -1*derivs$y
     min.vs <- min.vs[min.xs]
 

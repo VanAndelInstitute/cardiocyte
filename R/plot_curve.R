@@ -179,7 +179,7 @@ StatVel <- ggproto("StatVel",
                      v <- rep(NA, nrow(data))
                      xi <- rep(NA, nrow(data))
                      vel <- max_vels(data$y,
-                                          )
+                                          p = params$p)
                      if(params$direction == "up") {
                        v[vel$x.up] <- format(round(vel$velocity.up, params$digits),
                                              nsmall = params$digits)
