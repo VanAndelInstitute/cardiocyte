@@ -21,10 +21,16 @@ dat_sm <- Re(dat_sm)
 norm <- norm
 if (norm == FALSE) {
   return(dat_sm)
-} else {
+}
+if(norm == "baseline") {
  normalized <- correct_baseline(dat_sm)
  max <- max(normalized[find_peaks(normalized, p=p)])
  return(normalized/max)
+}
+if(norm == "min") {
+  normalized <- dat_sm-min(dat_sm)
+  normalized <- normalized/max(normalized)
+  return(normalized)
 }
 
 }
