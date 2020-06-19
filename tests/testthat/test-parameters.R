@@ -62,15 +62,13 @@ test_that("Time to Peak", {
 test_that("Max Rates per Baseline can be calculated", {
   data(ca_flux)
   rates <- max_rates_bl(ca_flux$Mean1)
-  expect_equal(round(rates[1], 4), 7e-04)
+  expect_equal(round(rates[1], 4), .0635)
 })
 
 test_that("Max Rates per peak height can be calculated", {
   data(ca_flux)
   rates <- max_rates_ph(ca_flux$Mean1)
-  expect_equal(round(rates[1], 3), 0.002)
-  rates <- max_rates_ph(ca_flux$Mean4)
-  expect_equal(round(rates[1], 3), 0.022)
+  expect_equal(round(rates[1], 3), 0.236)
 })
 
 test_that("transient integral can be calculated", {

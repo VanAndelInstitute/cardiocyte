@@ -137,12 +137,12 @@ percent_peak_height(sarc$Y)
 ```
 
 
-## Find pulse velocity with `max_velocities()`
+## Find pulse velocity with `max_vels()`
 
-This function returns the maximum velocities of the transient. The function takes a vector of time series data quantifying a transient, and returns both the locations of the maximum up (x.up) and down (x.down) velocities, as well as the values for the maximum up and down velocities. 
+This function returns the maximum velocities of each peak on the transient. The function takes a vector of time series data quantifying a transient, and returns both the locations of the maximum up (x.up) and down (x.down) velocities, as well as the values for the maximum up and down velocities. 
 
 ```{r}
-max_velocities(ca_flux$Mean1)
+max_vels(ca_flux$Mean1)
 
 ```
 
@@ -192,6 +192,19 @@ peak_integrals(ca_flux$Mean1)
 peak_integrals(ca_flux$Mean2)
 
 peak_integrals(sarc$Y)
+```
+
+
+## Smooth messy peaks with `FFT()`
+
+This function uses the Fast Fourier Transform method to smooth messy data. Especially useful for plotting. Data can also be normalized with two different methods. 
+
+```{r}
+FFT(ca_flux$Mean1, y=40, norm = "baseline")
+
+FFT(ca_flux$Mean2, y=40, norm = "min")
+
+FFT(sarc$Y, y=30)
 ```
 
 # Plotting
