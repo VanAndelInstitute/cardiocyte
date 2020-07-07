@@ -9,7 +9,7 @@ test_that("Peak detection", {
   expect_equal(sp, 2358) # issue #1
 })
 
-test_that("Esemble pulses", {
+test_that("Ensemble pulses", {
   data(ca_flux)
   signal <- ca_flux$Mean1
   dat <- ensemble(signal, norm = FALSE)
