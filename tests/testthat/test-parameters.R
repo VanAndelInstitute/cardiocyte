@@ -9,7 +9,7 @@ test_that("Peak detection", {
   expect_equal(sp, 2358) # issue #1
 })
 
-test_that("Esemble pulses", {
+test_that("Ensemble pulses", {
   data(ca_flux)
   signal <- ca_flux$Mean1
   dat <- ensemble(signal, norm = FALSE)
@@ -104,6 +104,6 @@ test_that("BPM can be calculated", {
 
 test_that("Max peak velocities can be calculated", {
   data(ca_flux)
-  vels <- max_vels(ca_flux$Mean1)
+  vels <- max_rates(ca_flux$Mean1)
   expect_equal(round(vels$velocity.up[1],2), 6.02)
 })

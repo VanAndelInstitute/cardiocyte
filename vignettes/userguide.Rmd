@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 This package contains tools for analyzing data that quantifies a transient. The package was originally created to analyze the contractions and sarcomeres of cardiomyocytes, but can be used on any vector of time series data quantifying a transient. 
 
-Being able to measure and quantify the intensity of cardiomyocyte contraction is very important in developing treatments for cardiovascular diseases that damage cardiac tissue. Cardiomyocyte contraction can be quantified by measuring the flux of Calcium ions across the cell's cytoplasm, or by measuring the intensity of pixel change on a video of beating cardiomyocytes. Cardiomyocyte sarcomere length and spacing can also be analyzed though visual media, though only a single photo is necessary. This R package contains several tools that make analyzing contraction and sarcomere data much more convenient. Becuase the contraction data (as well as the sarcomere spacing) is a transient (departs from a baseline, then returns to it, and repeats) it can be measured in terms of peaks and/or pulses. This package includes functions that help measure and quantify these peaks and pulses. 
+Being able to measure and quantify the intensity of cardiomyocyte contraction is very important in developing treatments for cardiovascular diseases that damage cardiac tissue. Cardiomyocyte contraction can be quantified by measuring the flux of Calcium ions across the cell's cytoplasm, or by measuring the intensity of pixel change on a video of beating cardiomyocytes. Cardiomyocyte sarcomere length and spacing can also be analyzed though visual media, though only a single photo is necessary. This R package contains several tools that make analyzing contraction and sarcomere data much more convenient. Because the contraction data (as well as the sarcomere spacing) is a transient (departs from a baseline, then returns to it, and repeats) it can be measured in terms of peaks and/or pulses. This package includes functions that help measure and quantify these peaks and pulses. 
 
 Each of the highlighted circles above represents an ROI (region of interest) for a video of cardiomyocyte calcium pulses. An open-source software called ImageJ then calculates the mean pixel change intensity (inside each ROI) over the course of the video as a vector of time series data quantifying the calcium flux transient. In the examples below, **"ca_flux"** refers to the data set from all of the ROIs, and **"Mean1"** refers to the first ROI, and **"Mean2"** the second ROI, etc. 
 
@@ -137,12 +137,30 @@ percent_peak_height(sarc$Y)
 ```
 
 
-## Find pulse velocity with `max_vels()`
+## Find pulse velocity with `max_rates()`
 
 This function returns the maximum velocities of each peak on the transient. The function takes a vector of time series data quantifying a transient, and returns both the locations of the maximum up (x.up) and down (x.down) velocities, as well as the values for the maximum up and down velocities. 
 
+```{r, echo = FALSE}
+max_rates <- function(x, p = 0, ...) {
+  smooth <- smooth.spline(x)
+  derivs <- predict(smooth, deriv = 1)
+
+
+    max.xs <- find_peaks(derivs$y, p=p, ...)
+    max.vs <- derivs$y
+    max.vs <- max.vs[max.xs]
+
+    min.xs <- find_peaks(-1*derivs$y, p=p, ...)
+    min.vs <- -1*derivs$y
+    min.vs <- min.vs[min.xs]
+
+  return(list(x.up = max.xs, x.down = min.xs, velocity.up = max.vs, velocity.down = -1*min.vs))
+}
+```
+
 ```{r}
-max_vels(ca_flux$Mean1)
+max_rates(ca_flux$Mean1)
 
 ```
 
@@ -200,11 +218,11 @@ peak_integrals(sarc$Y)
 This function uses the Fast Fourier Transform method to smooth messy data. Especially useful for plotting. Data can also be normalized with two different methods. 
 
 ```{r}
-FFT(ca_flux$Mean1, y=40, norm = "baseline")
+head(FFT(ca_flux$Mean1, y=40, norm = "baseline"))
 
-FFT(ca_flux$Mean2, y=40, norm = "min")
+head(FFT(ca_flux$Mean2, y=40, norm = "min"))
 
-FFT(sarc$Y, y=30)
+head(FFT(sarc$Y, y=30))
 ```
 
 # Plotting
@@ -260,4 +278,9 @@ standardized heights.
 plot_ensemble(ca_flux$Mean1, offset = 3, norm=TRUE) 
 ```
 
+If the data is lengthy with many time points, this alternative method for overlaying the peaks may be more useful. 
+
+```{r}
+plot_overlay(ca_flux$Mean1)
+```
 

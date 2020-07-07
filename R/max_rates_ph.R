@@ -11,7 +11,7 @@
 #' data(ca_flux)
 #' dat <- max_rates_ph(ca_flux$Mean1)
 max_rates_ph <- function(x) {
-  mvs <- max_vels(x)
+  mvs <- max_rates(x)
   ph <- peak_height(x)
   rates <- mvs$velocity.up / ph
   return(rates)

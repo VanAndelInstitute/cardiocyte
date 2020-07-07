@@ -11,7 +11,7 @@
 #' data(ca_flux)
 #' mr <- max_rates_bl(ca_flux$Mean1)
 max_rates_bl <- function(x) {
-  mvs <- max_vels(x)
+  mvs <- max_rates(x)
   bl <- baseline(as.matrix(t(x)), method = 'rolling', wm = 5, ws = 5)
   rates <- mvs$velocity.up / bl@baseline[mvs$x.up]
   return(rates)
