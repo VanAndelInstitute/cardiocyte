@@ -1,12 +1,13 @@
 #' plot_overlay
 #'
-#' plot the peaks of the transient over top of eachother, in order to find an "average" peak.
+#' plot the peaks of the transient over top of each other, in order to find an "average" peak.
 #'
 #' @param x vector of trace data
 
-#' @return a plot of the peaks overlayed on top of eachother
-#' @export
+#' @return a plot of the peaks overlaid on top of each other
 #' @importFrom reshape2 melt
+#'
+#' @export
 
 overlay <- function(x) {
   peaks <- vector("list", 1)
@@ -20,6 +21,8 @@ overlay <- function(x) {
   return(as.data.frame(do.call(rbind, peaks.NA)))
 
 }
+
+#' @export
 
 plot_overlay <- function(x, p=.5) {
 
@@ -45,7 +48,7 @@ options(warn = -1)
 
 options(warn=0)
 }
-
+#' @export
 
 isna <- function(x){
   prop <- mean(is.na(x))
